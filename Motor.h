@@ -2,6 +2,7 @@
 #define MOTOR_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 // Enum para os modos de operação do motor
 typedef enum {
@@ -19,5 +20,8 @@ void motor_start(motor_mode_t mode);
 
 // Atualiza o estado do motor (deve ser chamada periodicamente)
 void motor_update(void);
+
+// Retorna 'true' se o motor estiver ligado (liberando cereal) ou 'false' se estiver parado.
+bool motor_is_active(void);
 
 #endif // MOTOR_H

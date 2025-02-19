@@ -92,3 +92,7 @@ void motor_update(void) {
         pwm_set_chan_level(slice_num, channel, pulse_stop);
     }
 }
+
+bool motor_is_active(void) {
+    return current_mode != MODE_OFF;
+}
