@@ -73,3 +73,4 @@ set(PICO_SDK_PATH ${PICO_SDK_PATH} CACHE PATH "Path to the Raspberry Pi Pico SDK
 include(${PICO_SDK_INIT_CMAKE_FILE})
 # Add your project configuration here
 include_directories(${PICO_SDK_PATH}/src/rp2_common/hardware_pwm/include)
+include_directories(${PICO_SDK_PATH}/src/rp2_common/hardware_adc/include)

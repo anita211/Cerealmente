@@ -27,7 +27,6 @@ void display_show_welcome(void);
 
 // Exibe a mensagem de motor ativo (com scroll e texto)
 void display_show_motor_active(void);
-
-void display_show_text(const char *text);
+void display_show_text(const char *text[], int linhas);
 
 #endif // DISPLAY_H

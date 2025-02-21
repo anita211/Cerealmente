@@ -54,7 +54,7 @@ void display_scroll(bool enable) {
 void display_show_welcome(void) {
     // Limpa o buffer de renderização
     memset(buf, 0, SSD1306_BUF_LEN);
-    
+
     //sleep_ms(5000);
     display_scroll(false);
 
@@ -82,14 +82,7 @@ void display_show_motor_active(void) {
     display_show_lines(active_text, 4);
 }
 
-void display_show_text(const char *text) {
-    // Apaga o buffer
+void display_show_text(const char *text[], int linhas) {
     memset(buf, 0, SSD1306_BUF_LEN);
-    
-    // Escreve o texto na posição x=5, y=0.
-    // (Cast é necessário pois WriteString espera um 'char *')
-    WriteString(buf, 5, 0, (char*)text);
-    
-    // Renderiza o conteúdo do buffer no display
-    render(buf, &frame_area);
+    display_show_lines(text, linhas);
 }

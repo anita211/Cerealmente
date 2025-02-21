@@ -9,6 +9,7 @@
 #include "Motor.h"
 #include "Display.h"
 #include "Buzzer.h"
+#include "Joystick.h"
 
 int main() {
     stdio_init_all();
@@ -30,17 +31,35 @@ int main() {
 
     // Inicia o buzzer
     pwm_init_buzzer(BUZZER_PIN);
+
+    // Inicia o joystick
+    joystick_init();
+
+    // Variável para controlar a transição de estado do motor
+    bool motor_last_state = false;
+    bool active = motor_is_active();
     
     // Loop principal: atualiza o estado do motor e mantém o Wi‑Fi ativo
     while (true) {
         cyw43_arch_poll();
         motor_update();
+        active = motor_is_active();
         if (motor_is_active()) {
-            //display_show_motor_active();
-            display_show_text("Motor ativo");
-            play_star_wars(BUZZER_PIN);
+            display_show_motor_active();
+            buzzer_resume();
+            buzzer_update_starwars(BUZZER_PIN);
+            motor_last_state = true;
         } else {
-            display_show_welcome();
+            buzzer_stop();
+            buzzer_update_starwars(BUZZER_PIN);
+            if (motor_last_state) {
+                const char *msg[] = { "Motor parado" };
+                display_show_text(msg, 1);
+                sleep_ms(2000);
+                display_show_welcome();
+                motor_last_state = false;
+            }
+            joystick_update_display();
         }
         sleep_ms(100);
     }
