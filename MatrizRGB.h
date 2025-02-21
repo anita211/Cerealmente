@@ -16,6 +16,8 @@ void npSetLED(const uint index, const uint8_t r, const uint8_t g, const uint8_t 
 void npClear(void);
 void npWrite(void);
 int getIndex(int x, int y);
+void matrizRGB_init(void);
+void matrizRGB_step(void);
 void matrizRGB(void);
 void matrizClear(void);
 
