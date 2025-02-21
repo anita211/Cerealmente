@@ -11,6 +11,7 @@
 #include "Buzzer.h"
 #include "Joystick.h"
 #include "GPIO.h"
+#include "LedRGB.h"
 
 int main() {
     stdio_init_all();
@@ -35,6 +36,9 @@ int main() {
 
     // Inicia o joystick
     joystick_init();
+
+    // Inicia os LEDs RGB
+    led_rgb_init();
 
     // Inicia GPIO
     gpio_init_all();
@@ -86,6 +90,7 @@ int main() {
             }
 
             joystick_update_display();
+            led_rgb_update_from_joystick();
         }
         sleep_ms(100);
     }
