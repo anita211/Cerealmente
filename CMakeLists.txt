@@ -35,14 +35,14 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(ProjetoFinal ProjetoFinal.c Motor.c Wifi.c Display.c ssd1306_i2c.c Buzzer.c Joystick.c GPIO.c LedRGB.c)
+add_executable(ProjetoFinal ProjetoFinal.c Motor.c Wifi.c Display.c ssd1306_i2c.c Buzzer.c Joystick.c GPIO.c LedRGB.c frames_rgb.c MatrizRGB.c)
 
 
 pico_set_program_name(ProjetoFinal "ProjetoFinal")
 pico_set_program_version(ProjetoFinal "0.1")
 
 # Generate PIO header
-pico_generate_pio_header(ProjetoFinal ${CMAKE_CURRENT_LIST_DIR}/blink.pio)
+pico_generate_pio_header(ProjetoFinal ${CMAKE_CURRENT_LIST_DIR}/ws2818b.pio)
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(ProjetoFinal 0)

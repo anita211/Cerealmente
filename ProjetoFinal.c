@@ -12,6 +12,7 @@
 #include "Joystick.h"
 #include "GPIO.h"
 #include "LedRGB.h"
+#include "MatrizRGB.h"
 
 int main() {
     stdio_init_all();
@@ -43,6 +44,9 @@ int main() {
     // Inicia GPIO
     gpio_init_all();
 
+    // Inicia a matriz RGB
+    matrizRGB_init();
+
     // Variável para controlar a transição de estado do motor
     bool motor_last_state = false;
     bool active = motor_is_active();
@@ -56,6 +60,7 @@ int main() {
             display_show_motor_active();
             buzzer_resume();
             buzzer_update_starwars(BUZZER_PIN);
+            matrizRGB_step();
             motor_last_state = true;
             if (gpio_get(BUTTON_B_PIN) == 0) {  // Botão B pressionado
                 motor_start(MODE_OFF);
@@ -63,6 +68,7 @@ int main() {
         } else {
             buzzer_stop();
             buzzer_update_starwars(BUZZER_PIN);
+            matrizClear();
             if (motor_last_state) {
                 const char *msg[] = { "Motor parado" };
                 display_show_text(msg, 1);

@@ -11,4 +11,4 @@ extern void render(uint8_t *buf, struct render_area *area);
 extern void SetPixel(uint8_t *buf, int x, int y, bool on);
 extern void DrawLine(uint8_t *buf, int x0, int y0, int x1, int y1, bool on);
 extern void WriteChar(uint8_t *buf, int16_t x, int16_t y, uint8_t ch);
-extern void WriteString(uint8_t *buf, int16_t x, int16_t y, char *str);
+extern void WriteString(uint8_t *buf, int16_t x, int16_t y, const char *str);
