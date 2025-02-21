@@ -10,6 +10,7 @@
 #include "Display.h"
 #include "Buzzer.h"
 #include "Joystick.h"
+#include "GPIO.h"
 
 int main() {
     stdio_init_all();
@@ -35,6 +36,9 @@ int main() {
     // Inicia o joystick
     joystick_init();
 
+    // Inicia GPIO
+    gpio_init_all();
+
     // Variável para controlar a transição de estado do motor
     bool motor_last_state = false;
     bool active = motor_is_active();
@@ -49,6 +53,9 @@ int main() {
             buzzer_resume();
             buzzer_update_starwars(BUZZER_PIN);
             motor_last_state = true;
+            if (gpio_get(BUTTON_B_PIN) == 0) {  // Botão B pressionado
+                motor_start(MODE_OFF);
+            }
         } else {
             buzzer_stop();
             buzzer_update_starwars(BUZZER_PIN);
@@ -59,6 +66,25 @@ int main() {
                 display_show_welcome();
                 motor_last_state = false;
             }
+
+            // Verifica os botões para seleção de modo (apenas quando o motor está parado)
+            if (gpio_get(BUTTON_A_PIN) == 0) {  // Botão A pressionado (ativo em nível baixo)
+                int mode = joystick_get_mode();
+                switch (mode) {
+                    case 0:
+                        motor_start(MODE_POUCO);
+                        break;
+                    case 1:
+                        motor_start(MODE_NORMAL);
+                        break;
+                    case 2:
+                        motor_start(MODE_MUITO);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             joystick_update_display();
         }
         sleep_ms(100);

@@ -82,3 +82,8 @@ void joystick_update_display(void) {
         change_triggered = false;
     }
 }
+
+// Retorna o modo atual (0 para Pouco, 1 para Normal, 2 para Muito)
+int joystick_get_mode(void) {
+    return current_phrase;
+}

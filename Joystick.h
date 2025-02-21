@@ -18,4 +18,7 @@ void joystick_init(void);
 // direita, avança para a próxima frase, esquerda, volta para a frase anterior.
 void joystick_update_display(void);
 
+// Função que retorna o índice do modo atualmente exibido (0: Pouco, 1: Normal, 2: Muito)
+int joystick_get_mode(void);
+
 #endif // JOYSTICK_H

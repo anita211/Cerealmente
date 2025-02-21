@@ -93,3 +93,6 @@ void motor_update(void) {
     }
 }
 
+bool motor_is_active(void) {
+    return (current_mode != MODE_OFF);
+}
