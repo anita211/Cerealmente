@@ -3,6 +3,12 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
+#include "hardware/i2c.h"
+#include "pico/stdlib.h"
+#include "ssd1306.h"
+#include "ssd1306_font.h"
+#include "ssd1306_i2c.h"
 
 // Inicializa o display OLED via I2C
 void display_init(void);
@@ -18,5 +24,10 @@ void display_scroll(bool enable);
 
 // Exibe a mensagem de boas-vindas (com scroll e texto)
 void display_show_welcome(void);
+
+// Exibe a mensagem de motor ativo (com scroll e texto)
+void display_show_motor_active(void);
+
+void display_show_text(const char *text);
 
 #endif // DISPLAY_H

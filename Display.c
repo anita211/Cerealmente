@@ -1,8 +1,4 @@
 #include "Display.h"
-#include "pico/stdlib.h"
-#include "hardware/i2c.h"
-#include "ssd1306.h"
-#include <string.h>
 
 const uint I2C_SDA_PIN = 14;
 const uint I2C_SCL_PIN = 15;
@@ -56,17 +52,44 @@ void display_scroll(bool enable) {
 }
 
 void display_show_welcome(void) {
-    // Ativa o scroll, espera 5 segundos e desativa o scroll
-    display_scroll(true);
-    sleep_ms(5000);
+    // Limpa o buffer de renderização
+    memset(buf, 0, SSD1306_BUF_LEN);
+    
+    //sleep_ms(5000);
     display_scroll(false);
 
     // Define as linhas da mensagem de boas-vindas
     const char *welcome_text[] = {
         "   Bem-Vindo ",
-        " ao EmbarcaTech ",
-        "      2024 ",
-        "  SOFTEX/MCTI "
+        " ao Cerealmente ",
+        "           ",
+        "  Embarcatech "
     };
     display_show_lines(welcome_text, 4);
+}
+
+void display_show_motor_active(void) {
+    // Limpa o buffer de renderização
+    memset(buf, 0, SSD1306_BUF_LEN);
+
+    // Define as linhas da mensagem de boas-vindas
+    const char *active_text[] = {
+        "   Liberando ",
+        "   o Cereal  ",
+        "           ",
+        "  Cerealmente "
+    };
+    display_show_lines(active_text, 4);
+}
+
+void display_show_text(const char *text) {
+    // Apaga o buffer
+    memset(buf, 0, SSD1306_BUF_LEN);
+    
+    // Escreve o texto na posição x=5, y=0.
+    // (Cast é necessário pois WriteString espera um 'char *')
+    WriteString(buf, 5, 0, (char*)text);
+    
+    // Renderiza o conteúdo do buffer no display
+    render(buf, &frame_area);
 }

@@ -7,6 +7,7 @@
 
 #include "Wifi.h"
 #include "Motor.h"
+#include "Display.h"
 
 int main() {
     stdio_init_all();
@@ -21,11 +22,21 @@ int main() {
     
     // Inicia o servidor HTTP
     wifi_start_http_server();
+
+    // Inicia o display
+    display_init();
+    display_show_welcome();
     
     // Loop principal: atualiza o estado do motor e mantém o Wi‑Fi ativo
     while (true) {
         cyw43_arch_poll();
         motor_update();
+        if (motor_is_active()) {
+            //display_show_motor_active();
+            display_show_text("Motor ativo");
+        } else {
+            display_show_welcome();
+        }
         sleep_ms(100);
     }
     

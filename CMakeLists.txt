@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(ProjetoFinal ProjetoFinal.c Motor.c Wifi.c)
+add_executable(ProjetoFinal ProjetoFinal.c Motor.c Wifi.c Display.c ssd1306_i2c.c)
 
 
 pico_set_program_name(ProjetoFinal "ProjetoFinal")
