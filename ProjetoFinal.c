@@ -1,11 +1,12 @@
 #include "pico/stdlib.h"
-#include "wifi.h"
-#include "motor.h"
 #include "pico/cyw43_arch.h"
 #include <stdio.h>
 #include "lwip/tcp.h"
 #include <string.h>
 #include "hardware/pwm.h"
+
+#include "Wifi.h"
+#include "Motor.h"
 
 int main() {
     stdio_init_all();
