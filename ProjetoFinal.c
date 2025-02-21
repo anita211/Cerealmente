@@ -8,6 +8,7 @@
 #include "Wifi.h"
 #include "Motor.h"
 #include "Display.h"
+#include "Buzzer.h"
 
 int main() {
     stdio_init_all();
@@ -26,6 +27,9 @@ int main() {
     // Inicia o display
     display_init();
     display_show_welcome();
+
+    // Inicia o buzzer
+    pwm_init_buzzer(BUZZER_PIN);
     
     // Loop principal: atualiza o estado do motor e mantém o Wi‑Fi ativo
     while (true) {
@@ -34,6 +38,7 @@ int main() {
         if (motor_is_active()) {
             //display_show_motor_active();
             display_show_text("Motor ativo");
+            play_star_wars(BUZZER_PIN);
         } else {
             display_show_welcome();
         }
