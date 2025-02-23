@@ -1,5 +1,4 @@
 #include <stdint.h>
-
 #include "frames_rgb.h"
 
 #define MATRIX_ROWS 5
