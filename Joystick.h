@@ -9,7 +9,6 @@
 // Define os pinos usados para o joystick
 #define VRX_PIN 26  // Eixo X (ADC)
 #define VRY_PIN 27  // Eixo Y (ADC)
-#define SW_PIN 22   // Botão do joystick
 
 // Função para inicializar o joystick (configura ADC e botão)
 void joystick_init(void);

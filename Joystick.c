@@ -48,10 +48,6 @@ void joystick_init(void) {
     adc_init();
     adc_gpio_init(VRY_PIN); // Configura o pino VRY para ADC
     adc_gpio_init(VRX_PIN); // Configura o pino VRX para ADC
-
-    gpio_init(SW_PIN);       // Configura o pino do botão
-    gpio_set_dir(SW_PIN, GPIO_IN);
-    gpio_pull_up(SW_PIN);
 }
 
 // Função auxiliar para ler o eixo Y do joystick (VRY)
