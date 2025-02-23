@@ -5,6 +5,7 @@ const uint I2C_SCL_PIN = 15;
 
 // Buffer utilizado para renderizar o frame
 static uint8_t buf[SSD1306_BUF_LEN];
+
 // Estrutura que define a área de renderização do display
 static struct render_area frame_area;
 
