@@ -7,7 +7,6 @@
 #define BUTTON_A_PIN 5
 #define BUTTON_B_PIN 6
 #define LED_PIN      12
-#define BUZZER_PIN   21
 
 // Inicializa todos os pinos de entrada/saída necessários
 void gpio_init_all(void);
