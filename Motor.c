@@ -8,9 +8,9 @@
 
 // Valores de PWM (contagens)
 const uint32_t pulse_stop   = 750;
-const uint32_t pulse_pouco  = 900;   // velocidade baixa
-const uint32_t pulse_normal = 900;   // velocidade média
-const uint32_t pulse_muito  = 1000;  // velocidade alta
+const uint32_t pulse_pouco  = 600;   // velocidade baixa
+const uint32_t pulse_normal = 400;   // velocidade média
+const uint32_t pulse_muito  = 200;  // velocidade alta
 
 // Durações dos modos (em milissegundos)
 const uint32_t duration_pouco  = 10000;
