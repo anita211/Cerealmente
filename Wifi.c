@@ -4,7 +4,7 @@
 #include "lwip/tcp.h"
 #include <string.h>
 #include <stdio.h>
-#include "motor.h"  // Para chamar motor_start() nos comandos HTTP
+#include "motor.h"
 
 // Configurações Wi‑Fi
 #define WIFI_SSID "iPhone de Anita"
