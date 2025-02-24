@@ -1,6 +1,6 @@
 # Cerealmente
 
-Repositório contendo o código-fonte de um **dispenser de cereal** baseado em Raspberry Pi Pico W (BitDogLab). O projeto permite **ativar a liberação de cereal** tanto via **rede Wi-Fi** (HTTP) quanto localmente, usando **joystick** e **botões**. Além disso, exibe mensagens em um **display OLED**, reproduz **som** em um buzzer e mostra **animações** numa matriz de LEDs endereçáveis (WS2812B).
+Repositório contendo o código-fonte de um **dispenser de cereal** baseado na BitDogLab (Raspberry Pi Pico W). O projeto permite **ativar a liberação de cereal** tanto via **rede Wi-Fi** (HTTP) quanto localmente, usando **joystick** e **botões**. Além disso, exibe mensagens em um **display OLED**, reproduz **som** em um buzzer e mostra **animações** numa matriz de LEDs endereçáveis (WS2812B).
 
 ## Visão Geral
 
