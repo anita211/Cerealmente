@@ -77,7 +77,7 @@ int main() {
                 motor_last_state = false;
             }
 
-            // Verifica os botões para seleção de modo (apenas quando o motor está parado)
+            // Verifica o botão para seleção de modo (apenas quando o motor está parado)
             if (gpio_get(BUTTON_A_PIN) == 0) {  // Botão A pressionado
                 int mode = joystick_get_mode();
                 switch (mode) {
