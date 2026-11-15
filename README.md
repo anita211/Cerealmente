@@ -1,136 +1,99 @@
-# Cerealmente
+<div align="center">
 
-Repositório contendo o código-fonte de um **dispenser de cereal** baseado na BitDogLab (Raspberry Pi Pico W). O projeto permite **ativar a liberação de cereal** tanto via **rede Wi-Fi** (HTTP) quanto localmente, usando **joystick** e **botões**. Além disso, exibe mensagens em um **display OLED**, reproduz **som** em um buzzer e mostra **animações** numa matriz de LEDs endereçáveis (WS2812B).
+# 🥣 Cerealmente
 
-## Visão Geral
+**Dispenser de cereal com Raspberry Pi Pico W, controlado por Wi-Fi ou pelo joystick.**
 
-O dispenser é formado pelos seguintes componentes principais:
+*Projeto final do curso Embarcatech de Sistemas Embarcados.*
 
-- **Raspberry Pi Pico W / BitDogLab**: Microcontrolador que gerencia toda a lógica, incluindo leitura de sensores (joystick, botões) e controle do motor (servo 360°).  
-- **Display OLED** (128×64, I2C): Exibe mensagens ao usuário indicando estado do sistema ou instruções de uso.  
-- **Buzzer**: Reproduz uma música (tema de Star Wars) enquanto o cereal está sendo liberado.  
-- **Matriz de LEDs WS2812B** (5×5): Mostra uma animação de seta, indicando o acionamento do motor.  
-- **Joystick e botões** (A e B): Permitem navegação pelas opções de quantidade de cereal e confirmação/cancelamento da liberação.  
-- **Servo Motor 360°**: Responsável por liberar o cereal em três modos: Pouco, Normal ou Muito.  
-- **Wi-Fi**: Implementado pelo módulo integrado à Pico W, possibilitando ativar o dispenser via navegador (HTTP).
+<br>
 
-## Recursos Principais
+![Raspberry Pi Pico W](https://img.shields.io/badge/Raspberry_Pi-Pico_W-E8A0BF?style=for-the-badge&logo=raspberrypi&logoColor=white)
+![C](https://img.shields.io/badge/C-Pico_SDK-E8A0BF?style=for-the-badge&logo=c&logoColor=white)
+![CMake](https://img.shields.io/badge/CMake-build-E8A0BF?style=for-the-badge&logo=cmake&logoColor=white)
+![Wi-Fi](https://img.shields.io/badge/Wi--Fi-HTTP-E8A0BF?style=for-the-badge&logo=wifi&logoColor=white)
 
-1. **Controle Remoto (via HTTP)**  
-   - O projeto inicia um servidor HTTP na porta 80.  
-   - Ao acessar o endereço IP da Pico W, o usuário encontra links para acionar “Pouco”, “Normal”, “Muito” ou “Parar” o dispenser.
+[Visão geral](#-visão-geral) ·
+[Hardware](#-hardware) ·
+[Arquitetura](#-arquitetura-do-firmware) ·
+[Como compilar](#%EF%B8%8F-como-compilar-e-gravar) ·
+[Uso](#-uso)
 
-2. **Controle Local (Joystick + Botões)**  
-   - O joystick seleciona a quantidade de cereal a liberar (Pouco, Normal ou Muito).  
-   - O botão A confirma a seleção e aciona o motor.  
-   - O botão B interrompe a liberação de cereal a qualquer momento.
+</div>
 
-3. **Feedback Visual e Sonoro**  
-   - **Display OLED** exibe mensagens de boas-vindas, estado do motor e instruções.  
-   - **Buzzer** toca uma música enquanto o motor está ativo.  
-   - **Matriz de LEDs** apresenta uma animação de seta apontando para baixo durante a liberação.
+<br>
 
-4. **Organização em Múltiplos Módulos**  
-   - **Buzzer.c / Buzzer.h**: Controle de PWM para notas musicais.  
-   - **Motor.c / Motor.h**: Gerenciamento de PWM para o servo motor (modos Pouco, Normal, Muito).  
-   - **Display.c / Display.h**: Funções para exibir textos no OLED (via I2C).  
-   - **Joystick.c / Joystick.h**: Leitura de valores do ADC e gerenciamento de estados do joystick.  
-   - **MatrizRGB.c / MatrizRGB.h**: Inicializa e controla a PIO para LEDs NeoPixel.  
-   - **Wifi.c / Wifi.h**: Conexão à rede Wi-Fi e servidor HTTP para comandos remotos.  
-   - **GPIO.c / GPIO.h**: Configuração de pinos (botões, LED).  
-   - **LedRGB.c / LedRGB.h**: Exemplo para LEDs RGB comuns (caso seja usado).  
-   - **frames_rgb.c / frames_rgb.h**: Dados de animação para a matriz WS2812B.  
+## ✨ Visão geral
 
-## Estrutura de Pastas (Principais)
+O Cerealmente libera cereal em três quantidades (**Pouco**, **Normal** ou **Muito**) usando um servo de rotação contínua. Dá para acionar de dois jeitos:
+
+| | |
+|---|---|
+| 🌐 **Remoto** | A Pico W sobe um servidor HTTP na porta 80. Pelo navegador você escolhe a quantidade ou para o motor. |
+| 🕹️ **Local** | O joystick escolhe a quantidade, o botão **A** confirma e o botão **B** interrompe. |
+| 🖥️ **Feedback** | Mensagens no display OLED, animação de seta na matriz WS2812B e música no buzzer enquanto o motor gira. |
+
+## 🔌 Hardware
+
+| Componente | Função |
+|---|---|
+| Raspberry Pi Pico W / BitDogLab | Microcontrolador RP2040 e Wi-Fi (CYW43) |
+| Servo de rotação contínua (DS04-NFC ou similar) | Libera o cereal (PWM) |
+| Display OLED 128×64 (I2C) | Mensagens e instruções |
+| Matriz de LEDs WS2812B 5×5 | Animação durante a liberação (PIO) |
+| Buzzer passivo | Música durante a liberação (PWM) |
+| Joystick analógico KY-023 | Seleção da quantidade (ADC) |
+| Botões A e B | Confirmar e cancelar |
+| Fonte 5 V dedicada | Alimentação do servo |
+
+> 💡 Alimente o servo com uma fonte 5 V separada, ligando o GND dela ao da Pico, para evitar quedas de tensão quando o motor arranca.
+
+## 🧩 Arquitetura do firmware
+
+Cada periférico tem seu próprio módulo, e o `ProjetoFinal.c` só orquestra:
 
 ```
-Ceralmente/
-├── Buzzer.c
-├── Buzzer.h
-├── Display.c
-├── Display.h
-├── GPIO.c
-├── GPIO.h
-├── Joystick.c
-├── Joystick.h
-├── LedRGB.c
-├── LedRGB.h
-├── MatrizRGB.c
-├── MatrizRGB.h
-├── Motor.c
-├── Motor.h
-├── Wifi.c
-├── Wifi.h
-├── ProjetoFinal.c
-├── frames_rgb.c
-├── frames_rgb.h
-└── ...
+Cerealmente/
+├── ProjetoFinal.c       # loop principal e máquina de estados
+├── Wifi.c / .h          # conexão Wi-Fi + servidor HTTP (lwIP)
+├── Motor.c / .h         # PWM do servo (Pouco / Normal / Muito)
+├── Joystick.c / .h      # leitura do ADC e navegação
+├── Display.c / .h       # OLED via I2C
+├── MatrizRGB.c / .h     # WS2812B via PIO
+├── frames_rgb.c / .h    # quadros da animação
+├── Buzzer.c / .h        # notas musicais via PWM
+├── GPIO.c / .h          # botões e LEDs
+├── LedRGB.c / .h        # LED RGB comum
+├── lwipopts.h           # configuração da pilha TCP/IP
+└── CMakeLists.txt
 ```
 
-## Requisitos de Hardware
+## 🛠️ Como compilar e gravar
 
-- Placa **Raspberry Pi Pico W** (ou BitDogLab, que integra o mesmo microcontrolador).  
-- **Servo Motor** de rotação contínua (DS04-NFC ou similar).  
-- **Display OLED** 128×64 I2C.  
-- **Buzzer passivo** (para gerar as notas).  
-- **Matriz de LEDs** WS2812B (5×5).  
-- **Joystick** analógico (KY-023).  
-- **Dois botões** (A e B) com resistores de pull-up se necessário.  
-- Fonte de alimentação 5V com corrente suficiente para o servo.
+**Pré-requisitos:** [Pico SDK](https://github.com/raspberrypi/pico-sdk) com `PICO_SDK_PATH` configurado, CMake 3.13+ e o toolchain `arm-none-eabi-gcc`.
 
-## Compilação e Gravação
+```bash
+git clone https://github.com/anita211/Cerealmente.git
+cd Cerealmente
+mkdir build && cd build
+cmake ..
+make
+```
 
-1. **Clonar o Repositório**  
-   ```bash
-   git clone https://github.com/anita211/Ceralmente.git
-   cd Ceralmente
-   ```
+Para gravar, segure **BOOTSEL** ao conectar a Pico W no USB e copie o `.uf2` gerado para o disco que aparecer.
 
-2. **Configurar o SDK da Raspberry Pi Pico**  
-   - Garantir que o `PICO_SDK_PATH` esteja definido corretamente no seu sistema.  
-   - Instalar CMake (versão 3.13 ou superior) e um compilador compatível (GCC para ARM, etc.).
+## 🚀 Uso
 
-3. **Compilar**  
-   ```bash
-   mkdir build
-   cd build
-   cmake ..
-   make
-   ```
-   Isso gera o arquivo `.uf2` ou `.elf`, dependendo da sua configuração.
+1. Configure o SSID e a senha da sua rede em `Wifi.c`.
+2. Ligue a placa. O IP aparece no monitor serial USB.
+3. Acesse `http://<ip-da-pico>/` para controlar pelo navegador **ou** use o joystick e os botões.
 
-4. **Gravar na Pico W**  
-   - Conectar a Pico W ao computador enquanto mantém o botão BOOTSEL pressionado.  
-   - Aparecerá como um disco USB. Copiar o arquivo `.uf2` para esse disco.  
-   - A Pico W irá reiniciar rodando o firmware recém-gravado.
+## 🙏 Créditos
 
-## Executando o Projeto
+- Plataforma [BitDogLab](https://github.com/BitDogLab/BitDogLab-C) e documentação oficial do RP2040.
+- Programa **Embarcatech** de capacitação em sistemas embarcados.
 
-- **Inicialização**: Ao ligar a placa, o sistema realiza as configurações de Wi-Fi, Display, Buzzer, etc.  
-- **Wi-Fi**: A Pico W tenta se conectar à rede cujo SSID e senha estão configurados no código (`Wifi.c`). Verifique e edite caso necessário.  
-- **Servidor HTTP**: Depois de conectado, imprime o IP no console serial (`printf`). Acesse `http://<IP-da-Pico>/` no navegador para controlar o dispenser remotamente.  
-- **Controle Local**:  
-  - Use o **joystick** para navegar entre as opções (Pouco, Normal, Muito).  
-  - Pressione **botão A** para confirmar e acionar o motor.  
-  - Pressione **botão B** para cancelar/interromper.
-
-## Testes e Depuração
-
-- Através de mensagens `printf` em USB Serial, é possível monitorar o estado do sistema (ex.: mensagens de debug, IP adquirido, modo do motor).  
-- É recomendável alimentar o servo motor com uma fonte 5V dedicada (conectando GND com o da Pico) para evitar quedas de tensão durante o acionamento.
-
-## Licença
-
-O código-fonte é disponibilizado **sem garantia** de funcionamento para quaisquer fins específicos. Consulte o arquivo de licença (caso exista um LICENSE.md) ou aplique a licença do seu interesse. Caso contrário, assuma uso livre para fins de estudo/educação.
-
-## Créditos e Referências
-
-- **BitDogLab** e **Raspberry Pi Pico W** para a plataforma de hardware.  
-- Comunidade **Embarcados** e **Documentação oficial do RP2040** para suporte e exemplos.  
-- Código e exemplos inspirados em [Exemplos da BitDogLab](https://github.com/BitDogLab/BitDogLab-C).  
-
-## Contato
-
-Caso tenha dúvidas ou sugestões de melhoria, entre em contato via [GitHub Issues](https://github.com/anita211/Ceralmente/issues) ou abra um **Pull Request**. 
-
-Boa diversão com o **Cerealmente**!
+<div align="center">
+<br>
+<sub>Feito com 💗 por <a href="https://github.com/anita211">Anita Oliveira</a></sub>
+</div>
